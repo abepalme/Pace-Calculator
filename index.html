@@ -446,9 +446,9 @@
         </div>
 
         <div class="custom-dist" id="custom-dist-wrap">
-            <input type="number" id="custom-dist-val" placeholder="Value" min="0" inputmode="decimal" onwheel="this.blur()" oninput="onCustomDistChange()">
+            <input type="number" id="custom-dist-val" placeholder="Value" min="0" inputmode="decimal" onwheel="this.blur()" oninput="updateSplitOptions()">
             <div class="sel-wrap" style="margin-bottom:0;">
-                <select id="custom-dist-unit" onchange="onCustomDistChange()">
+                <select id="custom-dist-unit" onchange="updateSplitOptions()">
                     <option value="1">Meters</option>
                     <option value="1609.344">Miles</option>
                     <option value="1000">Kilometers</option>
@@ -459,14 +459,14 @@
 
         <label class="field" for="t-min">Goal Time</label>
         <div class="time-row">
-            <div class="t-wrap"><span>Min</span><input type="number" id="t-min" value="5" min="0" inputmode="numeric" onwheel="this.blur()" oninput="calculate(false)" onkeydown="onTimeKey(event)"></div>
+            <div class="t-wrap"><span>Min</span><input type="number" id="t-min" value="5" min="0" inputmode="numeric" onwheel="this.blur()" onkeydown="onTimeKey(event)"></div>
             <div class="t-sep">:</div>
-            <div class="t-wrap"><span>Sec</span><input type="number" id="t-sec" value="00" min="0" max="59" inputmode="numeric" onwheel="this.blur()" oninput="calculate(false)" onkeydown="onTimeKey(event)"></div>
+            <div class="t-wrap"><span>Sec</span><input type="number" id="t-sec" value="00" min="0" max="59" inputmode="numeric" onwheel="this.blur()" onkeydown="onTimeKey(event)"></div>
         </div>
 
         <label class="field" for="sel-split">Splits every</label>
         <div class="sel-wrap">
-            <select id="sel-split" onchange="calculate(false)">
+            <select id="sel-split">
                 <option value="200">200m</option>
                 <option value="400" selected>400m</option>
                 <option value="800">800m</option>
@@ -476,7 +476,7 @@
         </div>
 
         <div class="toggle-wrap">
-            <input type="checkbox" id="dist-toggle" onchange="calculate(false)">
+            <input type="checkbox" id="dist-toggle">
             <label for="dist-toggle">Show distance instead of laps</label>
         </div>
 
@@ -533,7 +533,6 @@
                 if (data.tSec != null) document.getElementById('t-sec').value = data.tSec;
                 if (data.splitVal) document.getElementById('sel-split').value = data.splitVal;
                 document.getElementById('dist-toggle').checked = data.showDist || false;
-                calculate(false);
             }
         }
 
@@ -541,12 +540,6 @@
             const isCustom = document.getElementById('sel-event').value === 'custom';
             document.getElementById('custom-dist-wrap').classList.toggle('show', isCustom);
             updateSplitOptions();
-            calculate(false);
-        }
-
-        function onCustomDistChange() {
-            updateSplitOptions();
-            calculate(false);
         }
 
         function onTimeKey(event) {
